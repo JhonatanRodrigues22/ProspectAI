@@ -12,6 +12,7 @@ O ProspectAI separa domínio, casos de uso, transporte HTTP e contratos externos
 - **Serviços:** clientes assíncronos para provedores externos.
 - **Integrações:** contratos e mapeadores específicos dos provedores.
 - **Frontend:** arquivos estáticos servidos pelo backend.
+- **UI:** aplicação Streamlit que consome exclusivamente o caso de uso `SearchService`.
 - **Launcher:** ponto único de entrada para execução local.
 - **Testes:** validação automatizada com mocks, sem chamadas externas.
 
@@ -26,6 +27,9 @@ SearchService
    |-- Google Geocoding: endereço -> coordenadas
    |-- Google Places: categoria + círculo -> leads
    `-- Haversine: confirmação do raio -> SearchResult
+
+Streamlit
+   `-- SearchRequest -> SearchService -> SearchResult -> tabela
 ```
 
 ## Limites explícitos
@@ -37,4 +41,4 @@ Nesta versão não existem:
 - inteligência artificial;
 - exportação CSV ou Excel;
 - paginação, retry ou métricas;
-- frontend avançado.
+- filtros, paginação ou customização visual avançada.

@@ -2,7 +2,7 @@
 
 Fundação do ProspectAI, uma aplicação planejada para localizar empresas por CEP, categoria e raio e gerar leads comerciais.
 
-> Estado atual: o fluxo de busca integra ViaCEP, Google Geocoding, Google Places e filtro geográfico real por raio. Ainda não existem exportação, banco de dados, autenticação ou recursos de IA.
+> Estado atual: o fluxo de busca integra ViaCEP, Google Geocoding, Google Places e filtro geográfico real, com uma interface funcional em Streamlit. Ainda não existem exportação, banco de dados, autenticação ou recursos de IA.
 
 ## Requisitos
 
@@ -39,6 +39,24 @@ Depois, acesse:
 - Saúde da API: http://127.0.0.1:8000/api/health
 - Consulta de CEP: http://127.0.0.1:8000/api/cep/01310-100
 - Documentação da API: http://127.0.0.1:8000/docs
+
+### Interface Streamlit
+
+Execute:
+
+```powershell
+python -m streamlit run ui/streamlit_app.py
+```
+
+Ou, no Windows:
+
+```powershell
+.\scripts\run_streamlit.ps1
+```
+
+Depois, acesse http://localhost:8501.
+
+A interface contém CEP, categoria, raio e o botão `Pesquisar`. Ela cria um `SearchRequest` e chama exclusivamente o `SearchService`, exibindo carregamento, erros, ausência de resultados e uma tabela simples quando a busca é concluída.
 
 ## Consulta de CEP
 
@@ -167,6 +185,7 @@ ProspectAI/
 │       └── services/       # Serviços de integração
 ├── frontend/               # Interface web estática
 ├── launcher/               # Entrada para execução local
+├── ui/                     # Interface funcional em Streamlit
 ├── docs/                   # Documentação técnica
 ├── scripts/                # Scripts de ambiente e validação
 ├── tests/                  # Testes automatizados
