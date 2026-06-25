@@ -73,6 +73,16 @@ Resposta:
 
 Erros de validação, CEP inexistente, indisponibilidade externa e timeout retornam mensagens amigáveis com status HTTP apropriado.
 
+## Modelos de domínio
+
+Os conceitos centrais ficam em `backend/app/domain/` e não dependem de FastAPI, ViaCEP, Google Places ou persistência:
+
+- `Lead`: empresa ou contato comercial encontrado.
+- `SearchRequest`: critérios internos de uma solicitação de busca.
+- `SearchResult`: conjunto de leads retornado por uma busca.
+
+Os modelos exigem CEP normalizado com oito dígitos e aplicam validações básicas de categoria, raio, avaliações, quantidade de reviews e coordenadas.
+
 ## Testes
 
 ```powershell
@@ -93,6 +103,7 @@ ProspectAI/
 │   └── app/
 │       ├── api/            # Rotas HTTP
 │       ├── core/           # Configuração central
+│       ├── domain/         # Modelos internos do negócio
 │       ├── models/         # Contratos de dados
 │       ├── services/       # Regras e chamadas externas
 │       └── integrations/   # Espaço para integrações futuras
