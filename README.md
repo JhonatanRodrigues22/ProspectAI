@@ -2,7 +2,7 @@
 
 Fundação do ProspectAI, uma aplicação planejada para localizar empresas por CEP, categoria e raio e gerar leads comerciais.
 
-> Estado atual: a consulta de endereços por CEP via ViaCEP está implementada. Ainda não existem busca de empresas, Google Places, banco de dados, autenticação ou recursos de IA.
+> Estado atual: as integrações isoladas com ViaCEP e Google Places estão implementadas. Ainda não existe fluxo integrado de busca, banco de dados, autenticação ou recursos de IA.
 
 ## Requisitos
 
@@ -83,6 +83,28 @@ Os conceitos centrais ficam em `backend/app/domain/` e não dependem de FastAPI,
 
 Os modelos exigem CEP normalizado com oito dígitos e aplicam validações básicas de categoria, raio, avaliações, quantidade de reviews e coordenadas.
 
+## Google Places
+
+O serviço `GooglePlacesService` encapsula a Places API (New) e converte resultados de Text Search diretamente em objetos `Lead`.
+
+Configure a chave somente no arquivo `.env`:
+
+```dotenv
+GOOGLE_PLACES_API_KEY=sua-chave
+GOOGLE_PLACES_TIMEOUT_SECONDS=5
+```
+
+Exemplo de uso isolado:
+
+```python
+from backend.app.services.google_places_service import GooglePlacesService
+
+service = GooglePlacesService()
+leads = await service.search_text("padarias em São Paulo")
+```
+
+A integração trata chave ausente ou inválida, rate limit, timeout, erros HTTP e respostas inesperadas. Ela não executa consulta ViaCEP nem implementa o fluxo completo de prospecção.
+
 ## Testes
 
 ```powershell
@@ -104,9 +126,9 @@ ProspectAI/
 │       ├── api/            # Rotas HTTP
 │       ├── core/           # Configuração central
 │       ├── domain/         # Modelos internos do negócio
+│       ├── integrations/   # Contratos e mapeadores de APIs externas
 │       ├── models/         # Contratos de dados
-│       ├── services/       # Regras e chamadas externas
-│       └── integrations/   # Espaço para integrações futuras
+│       └── services/       # Serviços de integração
 ├── frontend/               # Interface web estática
 ├── launcher/               # Entrada para execução local
 ├── docs/                   # Documentação técnica

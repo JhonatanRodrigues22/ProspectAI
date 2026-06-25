@@ -1,1 +1,1 @@
-"""Integração com Google Places será implementada em uma Issue futura."""
+"""Contratos externos e conversão da integração Google Places."""
