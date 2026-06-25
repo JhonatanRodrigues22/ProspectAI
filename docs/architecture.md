@@ -14,7 +14,9 @@ O ProspectAI separa domínio, casos de uso, transporte HTTP e contratos externos
 - **Integrações:** contratos e mapeadores específicos dos provedores.
 - **Frontend:** arquivos estáticos servidos pelo backend.
 - **UI:** aplicação Streamlit que consome exclusivamente o caso de uso `SearchService`.
-- **Launcher:** ponto único de entrada para execução local.
+- **Launcher:** supervisor local que configura a chave, escolhe portas livres,
+  inicia FastAPI e Streamlit, abre o navegador e encerra os processos em
+  conjunto.
 - **Testes:** validação automatizada com mocks, sem chamadas externas.
 
 ## Fluxo atual
@@ -31,6 +33,10 @@ SearchService
 
 Streamlit
    `-- SearchRequest -> SearchService -> SearchResult -> tabela/CSV/Excel
+
+Launcher
+   |-- FastAPI (porta 8000 ou próxima livre)
+   `-- Streamlit (porta 8501 ou próxima livre)
 ```
 
 ## Limites explícitos

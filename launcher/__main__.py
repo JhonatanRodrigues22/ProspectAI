@@ -1,3 +1,3 @@
 from launcher.main import main
 
-main()
+raise SystemExit(main())

@@ -14,4 +14,6 @@ if (-not (Test-Path ".env")) {
     Copy-Item ".env.example" ".env"
 }
 
-Write-Host "Ambiente preparado. Execute: .\.venv\Scripts\python.exe -m launcher"
+Write-Host "Ambiente preparado."
+Write-Host "Execute: .\.venv\Scripts\python.exe -m launcher"
+Write-Host "Ou dê duplo clique em ProspectAI.bat."

@@ -1,13 +1,17 @@
 # ProspectAI
 
-Fundação do ProspectAI, uma aplicação planejada para localizar empresas por CEP, categoria e raio e gerar leads comerciais.
+Aplicação local para localizar empresas por CEP, categoria e raio e gerar
+listas de leads comerciais.
 
-> Estado atual: o fluxo de busca integra ViaCEP, Google Geocoding, Google Places e filtro geográfico real, com interface Streamlit e exportações CSV e Excel. Ainda não existem banco de dados, autenticação ou recursos de IA.
+> Versão atual: `v0.1.0-rc1`. O fluxo integra ViaCEP, Google Geocoding,
+> Google Places, filtro geográfico real, interface Streamlit e exportações
+> CSV e Excel.
 
 ## Requisitos
 
 - Python 3.11 ou superior
-- Git (necessário apenas para versionamento e publicação)
+- Uma chave do Google Maps Platform com as APIs Places e Geocoding
+  habilitadas
 
 ## Instalação
 
@@ -21,26 +25,59 @@ pip install -r requirements-dev.txt
 Copy-Item .env.example .env
 ```
 
-Também é possível executar:
+No Windows, o script abaixo prepara o ambiente automaticamente:
 
 ```powershell
 .\scripts\setup.ps1
 ```
 
-## Execução
+## Configuração da chave Google
+
+Na primeira execução pelo launcher, o ProspectAI solicita a chave Google de
+forma oculta e a salva no arquivo local `.env`. Esse arquivo não é enviado ao
+Git.
+
+Também é possível configurá-la antecipadamente:
+
+```dotenv
+GOOGLE_PLACES_API_KEY=sua-chave
+```
+
+Consulte as [Release Notes da v0.1.0-rc1](docs/releases/v0.1.0-rc1.md) para
+as APIs necessárias e limitações conhecidas.
+
+## Execução recomendada
+
+No Windows, dê duplo clique em `ProspectAI.bat`. O arquivo prepara o ambiente
+na primeira execução e inicia a aplicação.
+
+Pelo terminal:
 
 ```powershell
 python -m launcher
 ```
 
-Depois, acesse:
+O launcher:
 
-- Aplicação: http://127.0.0.1:8000
+- inicia a API FastAPI;
+- inicia a interface Streamlit;
+- procura portas livres se `8000` ou `8501` estiverem ocupadas;
+- abre a interface no navegador;
+- encerra os dois processos com `Ctrl+C`.
+
+Com as portas padrão:
+
+- Interface: http://127.0.0.1:8501
 - Saúde da API: http://127.0.0.1:8000/api/health
-- Consulta de CEP: http://127.0.0.1:8000/api/cep/01310-100
 - Documentação da API: http://127.0.0.1:8000/docs
 
-### Interface Streamlit
+Para iniciar sem abrir o navegador:
+
+```powershell
+python -m launcher --no-browser
+```
+
+### Execução isolada da interface
 
 Execute:
 
@@ -137,11 +174,11 @@ Os conceitos centrais ficam em `backend/app/domain/` e não dependem de FastAPI,
 
 Os modelos exigem CEP normalizado com oito dígitos e aplicam validações básicas de categoria, raio, avaliações, quantidade de reviews e coordenadas.
 
-## Google Places
+## Google Places e Geocoding
 
 O serviço `GooglePlacesService` encapsula a Places API (New) e converte resultados de Text Search diretamente em objetos `Lead`.
 
-Configure a chave somente no arquivo `.env`:
+Se não usar o fluxo guiado do launcher, configure a chave no `.env`:
 
 ```dotenv
 GOOGLE_PLACES_API_KEY=sua-chave
@@ -149,7 +186,8 @@ GOOGLE_PLACES_TIMEOUT_SECONDS=5
 GOOGLE_GEOCODING_TIMEOUT_SECONDS=5
 ```
 
-A chave precisa ter acesso às APIs Places e Geocoding no Google Maps Platform.
+A chave precisa ter acesso às APIs Places e Geocoding no Google Maps
+Platform. Restrições de chave e cobrança são administradas no Google Cloud.
 
 Exemplo de uso isolado:
 
@@ -230,16 +268,3 @@ ProspectAI/
 ```
 
 Consulte [docs/architecture.md](docs/architecture.md) para os limites definidos nesta etapa.
-
-## Primeiro commit e push
-
-Após instalar o Git e criar um repositório vazio no GitHub:
-
-```powershell
-git init
-git add .
-git commit -m "chore: initialize ProspectAI foundation"
-git branch -M main
-git remote add origin https://github.com/SEU_USUARIO/ProspectAI.git
-git push -u origin main
-```

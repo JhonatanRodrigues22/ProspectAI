@@ -2,6 +2,25 @@
 
 Todas as mudanças relevantes do produto e do projeto são registradas neste arquivo.
 
+## [0.1.0-rc1] - 2026-06-25
+
+### Adicionado
+
+- Launcher unificado para iniciar API e Streamlit com um único comando.
+- Configuração guiada e oculta da chave Google no primeiro uso.
+- Detecção de portas ocupadas com seleção automática de alternativa.
+- Abertura automática da interface no navegador.
+- Atalho `ProspectAI.bat` para execução por duplo clique no Windows.
+- Release Notes em `docs/releases/v0.1.0-rc1.md`.
+- Testes automatizados do launcher.
+
+### Alterado
+
+- Versão pública consolidada como `0.1.0-rc1`.
+- Documentação reorganizada para instalação e uso por terceiros.
+- Launcher passou a encerrar API e interface em conjunto.
+- Tratamento do timeout explícito do ViaCEP foi uniformizado.
+
 ## [0.9.0] - 2026-06-25
 
 ### Adicionado
