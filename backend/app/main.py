@@ -11,8 +11,8 @@ FRONTEND_DIR = PROJECT_ROOT / "frontend"
 
 app = FastAPI(
     title=settings.app_name,
-    version="0.5.0",
-    description="API do ProspectAI com busca inicial de leads.",
+    version="0.6.0",
+    description="API do ProspectAI com busca geográfica por raio.",
 )
 
 app.include_router(api_router, prefix="/api")

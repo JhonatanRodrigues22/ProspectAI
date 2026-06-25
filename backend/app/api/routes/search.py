@@ -8,6 +8,15 @@ from backend.app.application.search_service import (
     get_search_service,
 )
 from backend.app.domain import SearchRequest, SearchResult
+from backend.app.services.google_geocoding_service import (
+    GoogleGeocodingAddressError,
+    GoogleGeocodingAuthenticationError,
+    GoogleGeocodingConfigurationError,
+    GoogleGeocodingError,
+    GoogleGeocodingNotFoundError,
+    GoogleGeocodingRateLimitError,
+    GoogleGeocodingTimeoutError,
+)
 from backend.app.services.google_places_service import (
     GooglePlacesAuthenticationError,
     GooglePlacesConfigurationError,
@@ -52,6 +61,41 @@ async def search_leads(
             detail=str(exc),
         ) from exc
     except ViaCepUnavailableError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=str(exc),
+        ) from exc
+    except GoogleGeocodingAddressError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail=str(exc),
+        ) from exc
+    except GoogleGeocodingNotFoundError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(exc),
+        ) from exc
+    except GoogleGeocodingConfigurationError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(exc),
+        ) from exc
+    except GoogleGeocodingAuthenticationError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=str(exc),
+        ) from exc
+    except GoogleGeocodingRateLimitError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=str(exc),
+        ) from exc
+    except GoogleGeocodingTimeoutError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail=str(exc),
+        ) from exc
+    except GoogleGeocodingError as exc:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=str(exc),
@@ -115,5 +159,5 @@ def _validation_message(exc: ValidationError) -> str:
     if "category" in fields:
         return "Categoria inválida. Informe uma categoria não vazia."
     if "radius_km" in fields:
-        return "Raio inválido. Informe um valor maior que zero."
+        return "Raio inválido. Informe um valor entre 0 e 50 km."
     return "Parâmetros de busca inválidos."

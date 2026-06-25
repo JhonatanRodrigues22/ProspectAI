@@ -80,6 +80,15 @@ def test_reject_search_request_with_invalid_radius() -> None:
         )
 
 
+def test_reject_search_request_above_supported_radius() -> None:
+    with pytest.raises(ValidationError):
+        SearchRequest(
+            cep="01310100",
+            category="padaria",
+            radius_km=50.1,
+        )
+
+
 def test_reject_search_request_with_empty_category() -> None:
     with pytest.raises(ValidationError):
         SearchRequest(

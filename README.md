@@ -2,7 +2,7 @@
 
 Fundação do ProspectAI, uma aplicação planejada para localizar empresas por CEP, categoria e raio e gerar leads comerciais.
 
-> Estado atual: o fluxo inicial de busca integra ViaCEP, Google Places e os modelos de domínio. Ainda não existem filtro geográfico real por raio, banco de dados, autenticação ou recursos de IA.
+> Estado atual: o fluxo de busca integra ViaCEP, Google Geocoding, Google Places e filtro geográfico real por raio. Ainda não existem exportação, banco de dados, autenticação ou recursos de IA.
 
 ## Requisitos
 
@@ -92,7 +92,10 @@ Configure a chave somente no arquivo `.env`:
 ```dotenv
 GOOGLE_PLACES_API_KEY=sua-chave
 GOOGLE_PLACES_TIMEOUT_SECONDS=5
+GOOGLE_GEOCODING_TIMEOUT_SECONDS=5
 ```
+
+A chave precisa ter acesso às APIs Places e Geocoding no Google Maps Platform.
 
 Exemplo de uso isolado:
 
@@ -117,9 +120,11 @@ Fluxo:
 
 1. valida e normaliza o CEP;
 2. resolve o endereço no ViaCEP;
-3. monta uma consulta textual com categoria e endereço;
-4. consulta o Google Places;
-5. retorna um `SearchResult` contendo objetos `Lead`.
+3. converte o endereço em coordenadas com Google Geocoding;
+4. consulta o Google Places com categoria, origem e raio;
+5. calcula a distância de cada lead com Haversine;
+6. descarta resultados sem coordenadas ou fora do raio;
+7. retorna um `SearchResult` contendo objetos `Lead`.
 
 Exemplo:
 
@@ -127,9 +132,11 @@ Exemplo:
 Invoke-RestMethod "http://127.0.0.1:8000/api/search?cep=12900000&category=academia&radius_km=5"
 ```
 
-### Limitação atual do raio
+### Aplicação do raio
 
-`radius_km` é obrigatório, validado e devolvido no resultado, mas ainda não aplica filtro geográfico real. A integração atual usa Text Search sem coordenadas de origem. Filtragem efetiva por raio dependerá de geocoding e busca geográfica em uma Issue futura.
+`radius_km` é obrigatório, deve estar entre 0 e 50 km e possui aplicação geográfica real. A consulta usa um círculo como bias no Google Places e confirma localmente cada distância com Haversine.
+
+Cada lead aceito recebe `distance_km`, arredondado para três casas decimais. Leads sem coordenadas são descartados porque não é possível confirmar sua distância.
 
 Quando nenhum estabelecimento é encontrado, a API retorna sucesso com `total_results` igual a zero e `leads` vazio.
 

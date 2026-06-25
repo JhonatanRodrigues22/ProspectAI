@@ -4,7 +4,7 @@ import json
 import httpx
 import pytest
 
-from backend.app.domain import Lead
+from backend.app.domain import GeoPoint, Lead
 from backend.app.services.google_places_service import (
     GOOGLE_PLACES_FIELD_MASK,
     GooglePlacesAuthenticationError,
@@ -71,7 +71,7 @@ def test_maps_valid_response_to_leads() -> None:
         assert request.headers["X-Goog-FieldMask"] == GOOGLE_PLACES_FIELD_MASK
         assert json.loads(request.content) == {
             "textQuery": "padaria em São Paulo",
-            "maxResultCount": 20,
+            "pageSize": 20,
         }
         return httpx.Response(200, json=VALID_RESPONSE)
 
@@ -99,6 +99,35 @@ def test_returns_empty_list() -> None:
     )
 
     assert run_search(transport) == []
+
+
+def test_sends_location_bias_with_origin_and_radius() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert json.loads(request.content)["locationBias"] == {
+            "circle": {
+                "center": {
+                    "latitude": -22.9527,
+                    "longitude": -46.5419,
+                },
+                "radius": 5000,
+            }
+        }
+        return httpx.Response(200, json={"places": []})
+
+    service = GooglePlacesService(
+        api_key="test-key",
+        transport=httpx.MockTransport(handler),
+    )
+
+    leads = asyncio.run(
+        service.search_text(
+            "academia",
+            origin=GeoPoint(latitude=-22.9527, longitude=-46.5419),
+            radius_km=5,
+        )
+    )
+
+    assert leads == []
 
 
 def test_handles_invalid_api_key() -> None:

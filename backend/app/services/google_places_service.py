@@ -2,7 +2,7 @@ import httpx
 from pydantic import ValidationError
 
 from backend.app.core.config import settings
-from backend.app.domain import Lead
+from backend.app.domain import GeoPoint, Lead
 from backend.app.integrations.google_places.mapper import (
     GooglePlaceMappingError,
     map_google_place_to_lead,
@@ -76,6 +76,8 @@ class GooglePlacesService:
         self,
         text_query: str,
         *,
+        origin: GeoPoint | None = None,
+        radius_km: float | None = None,
         max_result_count: int = 20,
     ) -> list[Lead]:
         if not self.api_key:
@@ -90,6 +92,24 @@ class GooglePlacesService:
             raise ValueError(
                 "A quantidade de resultados deve estar entre 1 e 20."
             )
+        if (origin is None) != (radius_km is None):
+            raise ValueError(
+                "Origem e raio devem ser informados em conjunto."
+            )
+        if radius_km is not None and not 0 < radius_km <= 50:
+            raise ValueError("O raio deve estar entre 0 e 50 km.")
+
+        request_body: dict[str, object] = {
+            "textQuery": query,
+            "pageSize": max_result_count,
+        }
+        if origin is not None and radius_km is not None:
+            request_body["locationBias"] = {
+                "circle": {
+                    "center": origin.model_dump(),
+                    "radius": radius_km * 1000,
+                }
+            }
 
         try:
             async with httpx.AsyncClient(
@@ -102,10 +122,7 @@ class GooglePlacesService:
                         "X-Goog-Api-Key": self.api_key,
                         "X-Goog-FieldMask": GOOGLE_PLACES_FIELD_MASK,
                     },
-                    json={
-                        "textQuery": query,
-                        "maxResultCount": max_result_count,
-                    },
+                    json=request_body,
                 )
                 self._raise_for_status(response)
         except httpx.TimeoutException as exc:

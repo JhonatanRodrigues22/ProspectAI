@@ -2,6 +2,25 @@
 
 Todas as mudanças relevantes do produto e do projeto são registradas neste arquivo.
 
+## [0.6.0] - 2026-06-25
+
+### Adicionado
+
+- Integração isolada com Google Geocoding.
+- Modelo `GeoPoint`.
+- Cálculo puro de distância pela fórmula de Haversine.
+- Bias circular no Google Places usando origem e raio.
+- Filtro final de leads pela distância geográfica calculada.
+- Campo opcional `distance_km` em `Lead`.
+- Tratamento de endereço insuficiente, geocoding sem resultado e falhas externas.
+- Testes mockados de geocoding, distância e filtragem integrada.
+
+### Alterado
+
+- `radius_km` passou a aceitar valores de até 50 km e agora é aplicado de fato.
+- Leads sem coordenadas são excluídos do resultado geográfico.
+- Versão da API atualizada para `0.6.0`.
+
 ## [0.5.0] - 2026-06-25
 
 ### Adicionado

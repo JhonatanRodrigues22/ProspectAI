@@ -6,6 +6,11 @@ from fastapi.testclient import TestClient
 from backend.app.application.search_service import get_search_service
 from backend.app.domain import Lead, SearchResult
 from backend.app.main import app
+from backend.app.services.google_geocoding_service import (
+    GoogleGeocodingAddressError,
+    GoogleGeocodingNotFoundError,
+    GoogleGeocodingUnavailableError,
+)
 from backend.app.services.google_places_service import (
     GooglePlacesConfigurationError,
     GooglePlacesUnavailableError,
@@ -114,7 +119,7 @@ def test_search_endpoint_rejects_empty_category() -> None:
     service.search.assert_not_awaited()
 
 
-@pytest.mark.parametrize("radius", ["0", "-1", "abc"])
+@pytest.mark.parametrize("radius", ["0", "-1", "51", "abc"])
 def test_search_endpoint_rejects_invalid_radius(radius: str) -> None:
     client, service = client_with_search_result()
 
@@ -129,7 +134,7 @@ def test_search_endpoint_rejects_invalid_radius(radius: str) -> None:
 
     assert response.status_code == 422
     assert response.json() == {
-        "detail": "Raio inválido. Informe um valor maior que zero."
+        "detail": "Raio inválido. Informe um valor entre 0 e 50 km."
     }
     service.search.assert_not_awaited()
 
@@ -139,6 +144,9 @@ def test_search_endpoint_rejects_invalid_radius(radius: str) -> None:
     [
         (CepNotFoundError("CEP não encontrado."), 404),
         (ViaCepUnavailableError("Falha ViaCEP"), 502),
+        (GoogleGeocodingAddressError("Endereço insuficiente"), 422),
+        (GoogleGeocodingNotFoundError("Sem coordenadas"), 404),
+        (GoogleGeocodingUnavailableError("Falha geocoding"), 502),
         (GooglePlacesConfigurationError("API Key ausente"), 503),
         (GooglePlacesUnavailableError("Falha Google"), 502),
     ],
