@@ -31,7 +31,11 @@ class ViaCepService:
         transport: httpx.AsyncBaseTransport | None = None,
     ) -> None:
         self.base_url = (base_url or settings.viacep_base_url).rstrip("/")
-        self.timeout_seconds = timeout_seconds or settings.viacep_timeout_seconds
+        self.timeout_seconds = (
+            timeout_seconds
+            if timeout_seconds is not None
+            else settings.viacep_timeout_seconds
+        )
         self.transport = transport
 
     @staticmethod
