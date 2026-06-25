@@ -2,7 +2,7 @@
 
 Fundação do ProspectAI, uma aplicação planejada para localizar empresas por CEP, categoria e raio e gerar leads comerciais.
 
-> Estado atual: somente a estrutura inicial está implementada. Ainda não existem busca de empresas, integrações externas, banco de dados, autenticação ou recursos de IA.
+> Estado atual: a consulta de endereços por CEP via ViaCEP está implementada. Ainda não existem busca de empresas, Google Places, banco de dados, autenticação ou recursos de IA.
 
 ## Requisitos
 
@@ -37,7 +37,41 @@ Depois, acesse:
 
 - Aplicação: http://127.0.0.1:8000
 - Saúde da API: http://127.0.0.1:8000/api/health
+- Consulta de CEP: http://127.0.0.1:8000/api/cep/01310-100
 - Documentação da API: http://127.0.0.1:8000/docs
+
+## Consulta de CEP
+
+O endpoint aceita CEP com ou sem hífen:
+
+```http
+GET /api/cep/{cep}
+```
+
+Exemplo:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/api/cep/01310-100
+```
+
+Resposta:
+
+```json
+{
+  "cep": "01310-100",
+  "logradouro": "Avenida Paulista",
+  "complemento": "até 610 - lado par",
+  "bairro": "Bela Vista",
+  "localidade": "São Paulo",
+  "uf": "SP",
+  "ibge": "3550308",
+  "gia": "1004",
+  "ddd": "11",
+  "siafi": "7107"
+}
+```
+
+Erros de validação, CEP inexistente, indisponibilidade externa e timeout retornam mensagens amigáveis com status HTTP apropriado.
 
 ## Testes
 
@@ -59,7 +93,9 @@ ProspectAI/
 │   └── app/
 │       ├── api/            # Rotas HTTP
 │       ├── core/           # Configuração central
-│       └── integrations/   # Futuras integrações externas
+│       ├── models/         # Contratos de dados
+│       ├── services/       # Regras e chamadas externas
+│       └── integrations/   # Espaço para integrações futuras
 ├── frontend/               # Interface web estática
 ├── launcher/               # Entrada para execução local
 ├── docs/                   # Documentação técnica

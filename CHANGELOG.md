@@ -2,6 +2,21 @@
 
 Todas as mudanças relevantes do produto e do projeto são registradas neste arquivo.
 
+## [0.2.0] - 2026-06-25
+
+### Adicionado
+
+- Endpoint `GET /api/cep/{cep}`.
+- Integração assíncrona com a API ViaCEP.
+- Validação e normalização de CEP com ou sem hífen.
+- Tratamento de CEP inválido, inexistente, timeout e falhas externas.
+- Testes automatizados com respostas externas simuladas.
+
+### Alterado
+
+- Configuração do ViaCEP passou a aceitar timeout por variável de ambiente.
+- Versão da API atualizada para `0.2.0`.
+
 ## [0.1.0] - 2026-06-25
 
 ### Adicionado

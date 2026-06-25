@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     google_places_api_key: str = ""
     google_places_base_url: str = "https://places.googleapis.com"
     viacep_base_url: str = "https://viacep.com.br"
+    viacep_timeout_seconds: float = 5.0
 
     model_config = SettingsConfigDict(
         env_file=".env",
