@@ -2,6 +2,15 @@
 
 Todas as mudanças relevantes do produto e do projeto são registradas neste arquivo.
 
+## [0.3.0] - 2026-06-25
+
+### Adicionado
+
+- Camada de domínio desacoplada em `backend/app/domain/`.
+- Modelos `Lead`, `SearchRequest` e `SearchResult`.
+- Validações de CEP normalizado, categoria, raio, rating, reviews e coordenadas.
+- Testes automatizados dos modelos de domínio.
+
 ## [0.2.0] - 2026-06-25
 
 ### Adicionado
