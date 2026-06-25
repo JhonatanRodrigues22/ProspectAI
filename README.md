@@ -2,7 +2,7 @@
 
 Fundação do ProspectAI, uma aplicação planejada para localizar empresas por CEP, categoria e raio e gerar leads comerciais.
 
-> Estado atual: as integrações isoladas com ViaCEP e Google Places estão implementadas. Ainda não existe fluxo integrado de busca, banco de dados, autenticação ou recursos de IA.
+> Estado atual: o fluxo inicial de busca integra ViaCEP, Google Places e os modelos de domínio. Ainda não existem filtro geográfico real por raio, banco de dados, autenticação ou recursos de IA.
 
 ## Requisitos
 
@@ -105,6 +105,34 @@ leads = await service.search_text("padarias em São Paulo")
 
 A integração trata chave ausente ou inválida, rate limit, timeout, erros HTTP e respostas inesperadas. Ela não executa consulta ViaCEP nem implementa o fluxo completo de prospecção.
 
+## Busca de leads
+
+O endpoint inicial de busca combina as integrações existentes:
+
+```http
+GET /api/search?cep=12900000&category=academia&radius_km=5
+```
+
+Fluxo:
+
+1. valida e normaliza o CEP;
+2. resolve o endereço no ViaCEP;
+3. monta uma consulta textual com categoria e endereço;
+4. consulta o Google Places;
+5. retorna um `SearchResult` contendo objetos `Lead`.
+
+Exemplo:
+
+```powershell
+Invoke-RestMethod "http://127.0.0.1:8000/api/search?cep=12900000&category=academia&radius_km=5"
+```
+
+### Limitação atual do raio
+
+`radius_km` é obrigatório, validado e devolvido no resultado, mas ainda não aplica filtro geográfico real. A integração atual usa Text Search sem coordenadas de origem. Filtragem efetiva por raio dependerá de geocoding e busca geográfica em uma Issue futura.
+
+Quando nenhum estabelecimento é encontrado, a API retorna sucesso com `total_results` igual a zero e `leads` vazio.
+
 ## Testes
 
 ```powershell
@@ -123,6 +151,7 @@ Ou:
 ProspectAI/
 ├── backend/                # Aplicação FastAPI
 │   └── app/
+│       ├── application/    # Casos de uso e orquestração
 │       ├── api/            # Rotas HTTP
 │       ├── core/           # Configuração central
 │       ├── domain/         # Modelos internos do negócio

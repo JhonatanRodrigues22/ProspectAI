@@ -2,6 +2,21 @@
 
 Todas as mudanças relevantes do produto e do projeto são registradas neste arquivo.
 
+## [0.5.0] - 2026-06-25
+
+### Adicionado
+
+- Orquestrador inicial de busca entre ViaCEP e Google Places.
+- Endpoint `GET /api/search`.
+- Composição textual de categoria e endereço para o Google Places.
+- Retorno padronizado como `SearchResult`.
+- Tratamento HTTP consistente para validação e falhas dos provedores.
+- Testes mockados do serviço de aplicação e do endpoint.
+
+### Observação
+
+- `radius_km` é validado e preservado, mas ainda não executa filtro geográfico real.
+
 ## [0.4.0] - 2026-06-25
 
 ### Adicionado
