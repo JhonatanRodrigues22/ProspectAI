@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     google_places_api_key: str = ""
     google_places_base_url: str = "https://places.googleapis.com"
     google_places_timeout_seconds: float = 5.0
+    google_geocoding_base_url: str = "https://maps.googleapis.com"
+    google_geocoding_timeout_seconds: float = 5.0
     viacep_base_url: str = "https://viacep.com.br"
     viacep_timeout_seconds: float = 5.0
 

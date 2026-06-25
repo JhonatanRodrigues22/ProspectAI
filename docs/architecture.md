@@ -1,38 +1,40 @@
-# Arquitetura inicial
+# Arquitetura
 
-## Objetivo desta etapa
+## Objetivo atual
 
-A Issue #001 entrega somente a fundação executável do ProspectAI. A estrutura separa responsabilidades sem antecipar regras de negócio.
+O ProspectAI separa domínio, casos de uso, transporte HTTP e contratos externos. O fluxo atual pesquisa leads por CEP, categoria e raio geográfico.
 
 ## Componentes
 
-- **Backend:** aplicação FastAPI, configuração e rotas HTTP.
+- **API:** aplicação FastAPI e tradução de erros para HTTP.
+- **Aplicação:** orquestração entre ViaCEP, Geocoding e Places.
+- **Domínio:** `Lead`, `SearchRequest`, `SearchResult`, `GeoPoint` e cálculo Haversine.
+- **Serviços:** clientes assíncronos para provedores externos.
+- **Integrações:** contratos e mapeadores específicos dos provedores.
 - **Frontend:** arquivos estáticos servidos pelo backend.
 - **Launcher:** ponto único de entrada para execução local.
-- **Integrações:** namespaces vazios para ViaCEP e Google Places.
-- **Testes:** validação da fundação existente.
+- **Testes:** validação automatizada com mocks, sem chamadas externas.
 
 ## Fluxo atual
 
 ```text
-python -m launcher
-        |
-        v
-FastAPI ----> /api/health
-   |
-   +--------> frontend/
+GET /api/search
+       |
+       v
+SearchService
+   |-- ViaCEP: CEP -> endereço
+   |-- Google Geocoding: endereço -> coordenadas
+   |-- Google Places: categoria + círculo -> leads
+   `-- Haversine: confirmação do raio -> SearchResult
 ```
 
 ## Limites explícitos
 
 Nesta versão não existem:
 
-- consulta ao ViaCEP;
-- consulta ao Google Places;
-- busca de empresas;
 - persistência em banco de dados;
 - autenticação;
 - inteligência artificial;
-- exportação CSV ou Excel.
-
-Esses itens dependem de Issues próprias.
+- exportação CSV ou Excel;
+- paginação, retry ou métricas;
+- frontend avançado.
