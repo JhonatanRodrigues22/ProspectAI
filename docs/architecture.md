@@ -10,6 +10,7 @@ O ProspectAI separa domínio, casos de uso, transporte HTTP e contratos externos
 - **Aplicação:** orquestração entre ViaCEP, Geocoding e Places.
 - **Domínio:** `Lead`, `SearchRequest`, `SearchResult`, `GeoPoint` e cálculo Haversine.
 - **Serviços:** clientes assíncronos para provedores externos.
+- **Exportadores:** transformações puras de `SearchResult` em formatos externos.
 - **Integrações:** contratos e mapeadores específicos dos provedores.
 - **Frontend:** arquivos estáticos servidos pelo backend.
 - **UI:** aplicação Streamlit que consome exclusivamente o caso de uso `SearchService`.
@@ -29,7 +30,7 @@ SearchService
    `-- Haversine: confirmação do raio -> SearchResult
 
 Streamlit
-   `-- SearchRequest -> SearchService -> SearchResult -> tabela
+   `-- SearchRequest -> SearchService -> SearchResult -> tabela/CSV
 ```
 
 ## Limites explícitos
@@ -39,6 +40,6 @@ Nesta versão não existem:
 - persistência em banco de dados;
 - autenticação;
 - inteligência artificial;
-- exportação CSV ou Excel;
+- exportação Excel;
 - paginação, retry ou métricas;
 - filtros, paginação ou customização visual avançada.

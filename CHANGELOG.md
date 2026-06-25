@@ -2,6 +2,20 @@
 
 Todas as mudanças relevantes do produto e do projeto são registradas neste arquivo.
 
+## [0.8.0] - 2026-06-25
+
+### Adicionado
+
+- Exportador CSV dedicado para `SearchResult`.
+- Cabeçalhos amigáveis em português.
+- Encoding UTF-8 com BOM e separador compatível com Excel.
+- Botão `Baixar CSV` no Streamlit quando houver resultados.
+- Testes de acentos, cabeçalhos, campos vazios e leitura CSV.
+
+### Alterado
+
+- Versão da API atualizada para `0.8.0`.
+
 ## [0.7.0] - 2026-06-25
 
 ### Adicionado

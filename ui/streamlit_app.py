@@ -15,6 +15,7 @@ from backend.app.domain import (
     SearchResult,
     normalize_cep,
 )
+from backend.app.exporters import export_search_result_csv
 
 SearchRunner = Callable[[SearchRequest], Awaitable[SearchResult]]
 
@@ -116,6 +117,13 @@ def render_app(service: SearchService | None = None) -> None:
         hide_index=True,
         width="stretch",
     )
+    st.download_button(
+        "Baixar CSV",
+        data=export_search_result_csv(result),
+        file_name=_csv_filename(result),
+        mime="text/csv; charset=utf-8",
+        width="stretch",
+    )
 
 
 def _validation_message(exc: Exception) -> str:
@@ -128,6 +136,14 @@ def _validation_message(exc: Exception) -> str:
         if "radius_km" in fields:
             return "Raio inválido. Informe um valor entre 0 e 50 km."
     return "Dados de busca inválidos."
+
+
+def _csv_filename(result: SearchResult) -> str:
+    safe_category = "".join(
+        character if character.isalnum() else "_"
+        for character in result.category.lower()
+    ).strip("_")
+    return f"prospectai_{safe_category or 'resultados'}_{result.origin_cep}.csv"
 
 
 if __name__ == "__main__":
