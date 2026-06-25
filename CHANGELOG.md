@@ -2,6 +2,21 @@
 
 Todas as mudanças relevantes do produto e do projeto são registradas neste arquivo.
 
+## [0.4.0] - 2026-06-25
+
+### Adicionado
+
+- Serviço assíncrono para Text Search da Places API (New).
+- Autenticação por `GOOGLE_PLACES_API_KEY`.
+- Contratos privados do provedor e mapper de respostas Google para `Lead`.
+- Tratamento de chave inválida, rate limit, timeout, erros HTTP e respostas inesperadas.
+- Testes automatizados da integração com transporte HTTP simulado.
+
+### Alterado
+
+- Timeout do Google Places passou a ser configurável por variável de ambiente.
+- Versão da API atualizada para `0.4.0`.
+
 ## [0.3.0] - 2026-06-25
 
 ### Adicionado
