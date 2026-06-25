@@ -2,7 +2,7 @@
 
 Fundação do ProspectAI, uma aplicação planejada para localizar empresas por CEP, categoria e raio e gerar leads comerciais.
 
-> Estado atual: o fluxo de busca integra ViaCEP, Google Geocoding, Google Places e filtro geográfico real, com uma interface funcional em Streamlit. Ainda não existem exportação, banco de dados, autenticação ou recursos de IA.
+> Estado atual: o fluxo de busca integra ViaCEP, Google Geocoding, Google Places e filtro geográfico real, com interface Streamlit e exportação CSV. Ainda não existem exportação Excel, banco de dados, autenticação ou recursos de IA.
 
 ## Requisitos
 
@@ -57,6 +57,25 @@ Ou, no Windows:
 Depois, acesse http://localhost:8501.
 
 A interface contém CEP, categoria, raio e o botão `Pesquisar`. Ela cria um `SearchRequest` e chama exclusivamente o `SearchService`, exibindo carregamento, erros, ausência de resultados e uma tabela simples quando a busca é concluída.
+
+Quando houver leads, a interface também exibe o botão `Baixar CSV`.
+
+## Exportação CSV
+
+O exportador recebe um `SearchResult` e gera CSV compatível com Excel no Windows:
+
+- codificação UTF-8 com BOM;
+- separador `;`;
+- cabeçalhos amigáveis em português;
+- campos ausentes representados como células vazias.
+
+O arquivo inclui nome, contatos, endereço, avaliação, distância e identificação da fonte. A exportação não depende do Streamlit e pode ser reutilizada por outras interfaces:
+
+```python
+from backend.app.exporters import export_search_result_csv
+
+csv_content = export_search_result_csv(search_result)
+```
 
 ## Consulta de CEP
 
@@ -180,6 +199,7 @@ ProspectAI/
 │       ├── api/            # Rotas HTTP
 │       ├── core/           # Configuração central
 │       ├── domain/         # Modelos internos do negócio
+│       ├── exporters/      # Exportadores puros de resultados
 │       ├── integrations/   # Contratos e mapeadores de APIs externas
 │       ├── models/         # Contratos de dados
 │       └── services/       # Serviços de integração
