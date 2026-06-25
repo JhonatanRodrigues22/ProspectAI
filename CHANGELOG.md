@@ -2,6 +2,21 @@
 
 Todas as mudanças relevantes do produto e do projeto são registradas neste arquivo.
 
+## [0.9.0] - 2026-06-25
+
+### Adicionado
+
+- Exportador Excel `.xlsx` para `SearchResult`.
+- Planilha `Leads` com cabeçalho destacado, filtros e primeira linha congelada.
+- Botão `Baixar Excel` no Streamlit.
+- Testes de leitura e compatibilidade com `openpyxl`.
+
+### Alterado
+
+- CSV e Excel passaram a compartilhar cabeçalhos e mapeamento de linhas.
+- `openpyxl` adicionado às dependências.
+- Versão da API atualizada para `0.9.0`.
+
 ## [0.8.0] - 2026-06-25
 
 ### Adicionado

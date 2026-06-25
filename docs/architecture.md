@@ -30,7 +30,7 @@ SearchService
    `-- Haversine: confirmação do raio -> SearchResult
 
 Streamlit
-   `-- SearchRequest -> SearchService -> SearchResult -> tabela/CSV
+   `-- SearchRequest -> SearchService -> SearchResult -> tabela/CSV/Excel
 ```
 
 ## Limites explícitos
@@ -40,6 +40,6 @@ Nesta versão não existem:
 - persistência em banco de dados;
 - autenticação;
 - inteligência artificial;
-- exportação Excel;
+- exportação PDF;
 - paginação, retry ou métricas;
 - filtros, paginação ou customização visual avançada.

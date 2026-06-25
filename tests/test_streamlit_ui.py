@@ -43,7 +43,7 @@ def test_streamlit_app_displays_completed_search() -> None:
     assert not app.exception
     assert app.success[0].value == "Busca concluída: 1 resultado(s)."
     assert len(app.dataframe) == 1
-    assert len(app.get("download_button")) == 1
+    assert len(app.get("download_button")) == 2
 
 
 def test_streamlit_app_displays_empty_state() -> None:
