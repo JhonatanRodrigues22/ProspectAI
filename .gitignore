@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+
+# Testes e qualidade
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Metadados locais de agentes
+.agents/
+
+# IDEs e sistema operacional
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Build e distribuição
+build/
+dist/
+exports/
+*.egg-info/
+
+# Arquivos gerados e temporários
+logs/
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~

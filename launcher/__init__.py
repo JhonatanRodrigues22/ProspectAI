@@ -1,0 +1,1 @@
+"""Launcher local do ProspectAI."""
