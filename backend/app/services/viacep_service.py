@@ -1,21 +1,20 @@
-import re
-
 import httpx
 from pydantic import ValidationError
 
 from backend.app.core.config import settings
+from backend.app.domain import InvalidCepError, normalize_cep
 from backend.app.models.cep import CepResponse
-
-
-class InvalidCepError(ValueError):
-    """O CEP informado não possui um formato aceito."""
 
 
 class CepNotFoundError(LookupError):
     """O ViaCEP informou que o CEP não existe."""
 
 
-class ViaCepUnavailableError(RuntimeError):
+class ViaCepError(RuntimeError):
+    """Erro base da integração ViaCEP."""
+
+
+class ViaCepUnavailableError(ViaCepError):
     """O ViaCEP não pôde responder corretamente."""
 
 
@@ -37,14 +36,7 @@ class ViaCepService:
 
     @staticmethod
     def normalize_cep(cep: str) -> str:
-        if any(character.isalpha() for character in cep):
-            raise InvalidCepError("CEP inválido. Informe exatamente 8 dígitos.")
-
-        normalized_cep = re.sub(r"[^0-9]", "", cep)
-        if len(normalized_cep) != 8:
-            raise InvalidCepError("CEP inválido. Informe exatamente 8 dígitos.")
-
-        return normalized_cep
+        return normalize_cep(cep)
 
     async def lookup(self, cep: str) -> CepResponse:
         normalized_cep = self.normalize_cep(cep)

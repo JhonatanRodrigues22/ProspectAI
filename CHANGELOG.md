@@ -2,6 +2,23 @@
 
 Todas as mudanças relevantes do produto e do projeto são registradas neste arquivo.
 
+## [0.7.0] - 2026-06-25
+
+### Adicionado
+
+- Primeira interface funcional em Streamlit.
+- Formulário com CEP, categoria e raio.
+- Estados visuais de carregamento, erro, ausência de resultados e sucesso.
+- Tabela simples para apresentação de leads.
+- Script PowerShell para iniciar a interface.
+- Testes headless com o framework oficial do Streamlit.
+
+### Alterado
+
+- Normalização de CEP movida para utilitário puro do domínio.
+- Streamlit adicionado às dependências da aplicação.
+- Versão da API atualizada para `0.7.0`.
+
 ## [0.6.0] - 2026-06-25
 
 ### Adicionado
